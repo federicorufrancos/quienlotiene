@@ -1,0 +1,17 @@
+.app-icon-navbar {
+  width: 1em;
+
+}
+
+.app-icon {
+  width: 2em;
+}
+/*
+.card-device-info {
+    max-width: 20rem;
+}
+*/
+
+.form-control:disabled {
+  background-color: darkgray;
+}
