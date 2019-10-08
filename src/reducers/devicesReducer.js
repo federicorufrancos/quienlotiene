@@ -6,17 +6,21 @@ const initialState = {
     ]
 }
 
-export default function(state = initialState, action){
-    console.log('getState ', state , action);
-    switch(action.type) {
+export default function(state = initialState, action) {
+    switch (action.type) {
         case 'ADD_DEVICE':
             return {
-                ...state, 
+                ...state,
                 devices: [...state.devices, action.payload]
-            }
-        case 'GET_DEVICES':
-            console.log('pide los devices');
-            return { state }
+            };
+        case 'BOOK_DEVICE':
+            return {
+                ...state,
+                devices: state.devices.map(device =>
+                    device.IDFlux === action.payload.id ? {...device, assignedTo: action.payload.assignedTo } :
+                    device
+                )
+            };
         default:
             return state;
     }

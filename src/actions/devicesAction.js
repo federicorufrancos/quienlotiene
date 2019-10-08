@@ -5,9 +5,9 @@ export const addDeviceAction = (device) => {
     }
 }
 
-export const getDevices = () => {
+export const bookDeviceAction = (booking) => {
     return {
-        type: 'GET_DEVICES',
-        payload: ''
+        type: 'BOOK_DEVICE',
+        payload: booking
     }
 }

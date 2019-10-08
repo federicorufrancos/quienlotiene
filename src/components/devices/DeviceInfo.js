@@ -3,25 +3,36 @@ import { Link } from "react-router-dom";
 import { ReactComponent as ArrowLeft } from "../../assets/arrow-circle-left-solid.svg";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
+import { bookDeviceAction } from '../../actions/devicesAction';
 
 const DeviceInfo = ({match, history}) => {
   const [deviceInfo, saveDeviceInfo] = useState({});
-
+  
   const id = match.params.id;
 
+  const dispatch = useDispatch();
+  const bookDevice = (booking) => dispatch(bookDeviceAction(booking));
+  
   const { devices } = useSelector(state => state.devices);
-
+  
   useEffect(() => {
     if (deviceInfo) {
       const deviceFound = devices.find(device => device.IDFlux === id);
       saveDeviceInfo(deviceFound);
-      console.log("encontró el dispositivo");
     }
   }, [deviceInfo]);
 
-  const reservar = () => {
+  const onBookDevice = () => {
+    bookDevice({id, assignedTo: 'federico rufrancos'});
+    Swal.fire(
+        'Reservado!',
+        'El dispositivo te fue asignado.',
+        'success'
+    );
+    history.push('/');
     Swal.fire("Reservado!", "El dispositivo te fue asignado.", "success");
-  };
+  }
+
   return (
     <div className="col-lg-12">
       <Link to="/" className="btn btn-info">
@@ -67,7 +78,7 @@ const DeviceInfo = ({match, history}) => {
       <button
         className="btn btn-success"
         type="button"
-        onClick={() => reservar()}
+        onClick={() => onBookDevice()}
       >
         Reservar
       </button>
