@@ -5,9 +5,9 @@ export const addDeviceAction = (device) => {
     }
 }
 
-export const bookDeviceAction = (booking) => {
+export const updateDeviceAssignmentAction = (booking) => {
     return {
-        type: 'BOOK_DEVICE',
+        type: 'UPDATE_DEVICE_ASSIGNMENT',
         payload: booking
     }
 }

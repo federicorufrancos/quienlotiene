@@ -13,7 +13,7 @@ export default function(state = initialState, action) {
                 ...state,
                 devices: [...state.devices, action.payload]
             };
-        case 'BOOK_DEVICE':
+        case 'UPDATE_DEVICE_ASSIGNMENT':
             return {
                 ...state,
                 devices: state.devices.map(device =>
