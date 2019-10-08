@@ -1,5 +1,24 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Thrid part libraries
+* Alerts
+    https://sweetalert2.github.io/
+* Spinners 
+    https://tobiasahlin.com/spinkit/
+
+## Styling
+* Template
+    https://bootswatch.com/darkly/
+* Icons
+    https://fontawesome.com/icons?d=gallery
+
+## Git branch naming
+* User developing task - task type - SummaryOperationDeveloping
+* Task types: feature, bug
+* EX: 
+    FR-feature-BookDevice
+
+
 ## Available Scripts
 
 In the project directory, you can run:
