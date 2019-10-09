@@ -13,7 +13,7 @@ const DeviceInfo = ({ match, history }) => {
   const dispatch = useDispatch();
   const updateDeviceAssignment = booking => dispatch(updateDeviceAssignmentAction(booking));
 
-  const { devices } = useSelector(state => state.devices);
+  const { devices } = useSelector(state => state.devicesReducer);
 
   useEffect(() => {
     if (deviceInfo) {

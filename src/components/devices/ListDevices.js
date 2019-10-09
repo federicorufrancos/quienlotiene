@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const ListDevices = () => {
   
-  const { devices } = useSelector(state => state);
+  const { devices } = useSelector(state => state.devicesReducer);
   
   if(!devices) return <h1>Esperando</h1>
 
@@ -26,7 +26,7 @@ const ListDevices = () => {
           </tr>
         </thead>
         <tbody>
-          {devices.devices.map(device => (
+          {devices.map(device => (
             <Device key={device.ID} device={device} />
           ))}
         </tbody>
