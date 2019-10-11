@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 
-const DeviceInfo = ({ match, history, deviceInfo }) => {
+const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
   
   if (!deviceInfo) {
     return <h1> Esperando </h1>;
@@ -33,9 +33,15 @@ const DeviceInfo = ({ match, history, deviceInfo }) => {
 
 
   const onUpdateDeviceAssignment = () => {
-    //updateDeviceAssignment({ id, assignedTo: nextAssignTo });
-    Swal.fire(...alerOpt);
-    history.push("/");
+    const { id } = match.params;
+    const deviceUpdated = {...deviceInfo, assignedTo : nextAssignTo};
+    firestore.update({
+      collection: 'devices',
+      doc: id
+    }, deviceUpdated).then(() => {
+      Swal.fire(...alerOpt);
+      history.push("/");
+    });
   };
 
   return (

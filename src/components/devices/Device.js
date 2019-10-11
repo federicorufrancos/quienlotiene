@@ -5,8 +5,8 @@ import { ReactComponent as Info } from '../../assets/info-circle-solid.svg';
 const Device = ({ device }) => {
   return (
     <tr className={device.assignedTo ? 'table-danger' : 'table-dark'}>
-      <th scope="row"> {device.name} </th> <td> {device.assignedTo} </td>
-      <td> {device.OSVersion} </td>
+      <th scope="row">{device.name}</th><td>{device.assignedTo}</td>
+      <td>{device.OSVersion}</td>
       <td>
         <Link to={`/device/${device.id}`}>
           <Info className="app-icon" />
