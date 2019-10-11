@@ -1,14 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Device from "./Device";
-import Header from "../layouts/Header";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import PropTypes from 'prop-types';
 
-const ListDevices = () => {
-  
-  const { devices } = useSelector(state => state.devicesReducer);
-  
-  if(!devices) return <h1>Esperando</h1>
+import Device from './Device';
+import Header from '../layouts/Header';
+
+const ListDevices = ({ devices }) => {
+  if (!devices) return <h1> Esperando </h1>;
 
   return (
     <div className="col-lg-12">
@@ -21,13 +22,15 @@ const ListDevices = () => {
       <table className="table table-hover">
         <thead>
           <tr>
-            <th scope="col"> Nombre </th> <th scope="col"> Asignando a </th>
-            <th scope="col"> Versión OS </th> <th scope="col"> Acción </th>
+            <th scope="col"> Nombre </th>
+            <th scope="col"> Asignando a </th>
+            <th scope="col"> Versión OS </th>
+            <th scope="col"> Acción </th>
           </tr>
         </thead>
         <tbody>
           {devices.map(device => (
-            <Device key={device.ID} device={device} />
+            <Device key={device.id} device={device} />
           ))}
         </tbody>
       </table>
@@ -35,4 +38,12 @@ const ListDevices = () => {
   );
 };
 
-export default ListDevices;
+ListDevices.propTypes = {
+  firestore: PropTypes.object.isRequired,
+  devices: PropTypes.array.isRequired
+};
+
+export default compose(
+  firestoreConnect([{ collection: 'devices' }]),
+  connect((state, props) => ({ devices: state.firestore.ordered.devices }))
+)(ListDevices);
