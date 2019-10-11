@@ -34,15 +34,12 @@ const rootReducer = combineReducers({
     firestore: firestoreReducer
 });
 
-const initialState = {};
+const initialState = {
+};
 
 const store = createStoreWithFirebase(rootReducer, initialState, compose(
     reactReduxFirebase(firebase),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 ));
-
-store.subscribe(() => {
-    console.log('algo cambio');
-});
 
 export default store;
