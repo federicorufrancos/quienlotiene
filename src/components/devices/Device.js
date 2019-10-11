@@ -8,7 +8,7 @@ const Device = ({ device }) => {
       <th scope="row"> {device.name} </th> <td> {device.assignedTo} </td>
       <td> {device.OSVersion} </td>
       <td>
-        <Link to={`/device/${device.IDFlux}`}>
+        <Link to={`/device/${device.id}`}>
           <Info className="app-icon" />
         </Link>
       </td>

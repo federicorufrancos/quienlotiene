@@ -2,25 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as ArrowLeft } from "../../assets/arrow-circle-left-solid.svg";
 import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-import { updateDeviceAssignmentAction } from "../../actions/devicesAction";
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
 
-const DeviceInfo = ({ match, history }) => {
-  const [deviceInfo, saveDeviceInfo] = useState({});
-
-  const id = match.params.id;
-
-  const dispatch = useDispatch();
-  const updateDeviceAssignment = booking => dispatch(updateDeviceAssignmentAction(booking));
-
-  const { devices } = useSelector(state => state.devicesReducer);
-
-  useEffect(() => {
-    if (deviceInfo) {
-      const deviceFound = devices.find(device => device.IDFlux === id);
-      saveDeviceInfo(deviceFound);
-    }
-  }, [deviceInfo]);
+const DeviceInfo = ({ match, history, deviceInfo }) => {
+  
+  if (!deviceInfo) {
+    return <h1> Esperando </h1>;
+  }
 
   let operation = "Reservar";
   let classNameOperation = "btn-danger";
@@ -43,7 +33,7 @@ const DeviceInfo = ({ match, history }) => {
 
 
   const onUpdateDeviceAssignment = () => {
-    updateDeviceAssignment({ id, assignedTo: nextAssignTo });
+    //updateDeviceAssignment({ id, assignedTo: nextAssignTo });
     Swal.fire(...alerOpt);
     history.push("/");
   };
@@ -106,4 +96,13 @@ const DeviceInfo = ({ match, history }) => {
   );
 };
 
-export default DeviceInfo;
+export default compose(
+  firestoreConnect(props => [{ 
+    collection: 'devices',
+    storeAs: 'device',
+    doc: props.match.params.id
+  }]),
+  connect(({firestore: {data}}, props) => ({ deviceInfo: data.device && data.device}))
+)(DeviceInfo);
+
+
