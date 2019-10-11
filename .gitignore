@@ -1,8 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+src/store.js
 
 # dependencies
 /node_modules
-/src/store.js
 /.pnp
 .pnp.js
 
