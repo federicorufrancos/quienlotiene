@@ -142,7 +142,7 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
             </p>
             <p className="card-text">
               <span className="font-weight-bold"> Funciona: </span>
-              {deviceInfo.works}
+              {deviceInfo.works ? 'SI' : 'NO'}
             </p>
             <p className="card-text">
               <span className="font-weight-bold"> IMEI: </span>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from '../layouts/Header';
 import { firestoreConnect } from 'react-redux-firebase';
 import PropTypes from 'prop-types';
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
 const NewDevice = ({ history, firestore }) => {
   const [name, saveName] = useState('');
@@ -11,6 +11,7 @@ const NewDevice = ({ history, firestore }) => {
   const [IDFlux, saveIDFlux] = useState('');
   const [IMEI, saveIMEI] = useState('');
   const [deviceId, saveDeviceId] = useState('');
+  const [works, saveWorks] = useState(true);
   const [comments, saveComments] = useState('');
 
   const onSubmitDevice = e => {
@@ -24,19 +25,19 @@ const NewDevice = ({ history, firestore }) => {
       IDFlux,
       IMEI,
       deviceId,
-      comments
+      works,
+      comments,
+      assignedTo: ''
     };
-    
-    firestore
-      .add({ collection: 'devices' }, newDevice)
-      .then(() => {
-        Swal.fire(
-          'Se agrego el dispositivo',
-          'El dispositivo fue dado de alta correctamente',
-          'success'
-        )
-        history.push('/')
-      });  
+
+    firestore.add({ collection: 'devices' }, newDevice).then(() => {
+      Swal.fire(
+        'Se agrego el dispositivo',
+        'El dispositivo fue dado de alta correctamente',
+        'success'
+      );
+      history.push('/');
+    });
   };
 
   const operativeSystems = ['Android', 'IOS'];
@@ -53,7 +54,7 @@ const NewDevice = ({ history, firestore }) => {
             type="text"
             name={name}
             onChange={e => saveName(e.target.value)}
-            placeholder="Escriba el nombre del dispositiv"
+            placeholder="Escriba el nombre del dispositivo"
             required
             className="form-control"
           />
@@ -68,7 +69,7 @@ const NewDevice = ({ history, firestore }) => {
                   name={operativeSystem}
                   onChange={e => saveOperativeSystem(e.target.value)}
                 >
-                  <option option=""> Seleccione un valor </option>
+                  <option option=""> Seleccione el sistema operativo </option>
                   {operativeSystems.map((operativeSystem, index) => (
                     <option key={index} value={operativeSystem}>
                       {operativeSystem}
@@ -130,6 +131,17 @@ const NewDevice = ({ history, firestore }) => {
               />
             </div>
           </div>
+        </div>
+        <div className="form-group mb-2">
+          <label>
+            Funciona:
+            <input
+              className="form-check-input ml-3 mt-2"
+              type="checkbox"
+              value={works}
+              onChange={e => saveWorks(e.target.value)}
+            />
+          </label>
         </div>
         <div className="form-group">
           <label> Comentarios: </label>
