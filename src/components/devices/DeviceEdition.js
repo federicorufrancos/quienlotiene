@@ -15,18 +15,29 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
   const [operativeSystem, saveOperativeSystem] = useState(
     deviceToUpdate.operativeSystem
   );
-  const [OSVersion, saveOSVersion] = useState('');
-  const [IDFlux, saveIDFlux] = useState('');
-  const [IMEI, saveIMEI] = useState('');
-  const [deviceId, saveDeviceId] = useState('');
-  const [comments, saveComments] = useState('');
+  const [OSVersion, saveOSVersion] = useState(deviceToUpdate.OSVersion);
+  const [IDFlux, saveIDFlux] = useState(deviceToUpdate.IDFlux);
+  const [IMEI, saveIMEI] = useState(deviceToUpdate.IMEI);
+  const [deviceId, saveDeviceId] = useState(deviceToUpdate.deviceId);
+  const [works, saveWorks] = useState(deviceToUpdate.works);
+  const [comments, saveComments] = useState(deviceToUpdate.comments);
 
   const operativeSystems = ['Android', 'IOS'];
 
   const onSubmitUpdateDevice = e => {
     e.preventDefault();
     console.log('name ', name);
-    const deviceUpdated = { ...deviceToUpdate, name };
+    const deviceUpdated = {
+      ...deviceToUpdate,
+      name,
+      operativeSystem,
+      OSVersion,
+      IDFlux,
+      IMEI,
+      deviceId,
+      works,
+      comments
+    };
     console.log('deviceUpdated ', deviceUpdated, ' id ', id);
     firestore
       .update(
@@ -74,7 +85,7 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
                   <option
                     key={index}
                     value={os}
-                    selected={os === operativeSystem}
+                    defaultValue={os === operativeSystem}
                   >
                     {os}
                   </option>
@@ -135,6 +146,18 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
                 </div>
               </div>
             </div>
+            <div className="form-group mb-2">
+              <label>
+                Funciona:
+                <input
+                  className="form-check-input ml-3 mt-2"
+                  type="checkbox"
+                  checked={works}
+                  onChange={e => saveWorks(e.target.checked)}
+                />
+              </label>
+            </div>
+            {works}
             <div className="form-group">
               <label> Comentarios: </label>
               <textarea
@@ -147,7 +170,7 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
             </div>
             <input
               type="submit"
-              value="Agergar dispositivo"
+              value="Guardar cambios"
               className="btn btn-success mb-3 ml-3"
             />
           </div>
