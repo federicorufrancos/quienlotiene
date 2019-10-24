@@ -10,7 +10,7 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
   if (!deviceInfo) {
     return <h1> Esperando </h1>;
   }
-
+  const { id } = match.params;
   let operation = 'Reservar';
   let classNameOperation = 'btn-danger';
   let alerOpt = ['Reservado!', 'El dispositivo te fue asignado.', 'success'];
@@ -30,7 +30,6 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
   }
 
   const onUpdateDeviceAssignment = () => {
-    const { id } = match.params;
     let newAssignation = '';
     let waitingList = deviceInfo.waitingList ? deviceInfo.waitingList : [];
     let newAssignationRecord = '';
@@ -51,7 +50,6 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
         });
         break;
       case 'release':
-        debugger;
         newAssignationRecord = { ...deviceInfo.assignedTo };
         newAssignationRecord.dateRelease = new Date().toLocaleDateString();
         newAssignationRecord.deviceId = id;
@@ -112,7 +110,17 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
       </Link>
       <div>
         <div className="card card-device-info border-secondary mb-3 mt-3">
-          <div className="card-header"> Información sobre el dispositivo </div>
+          <div className="card-header">
+            <span className="lead">Información sobre el dispositivo</span>
+            <span className="pt-1">
+              <Link
+                to={`/device/edit/${id}`}
+                className="btn btn-info float-right"
+              >
+                Editar
+              </Link>
+            </span>
+          </div>
           <div className="card-body">
             <p className="card-text">
               <span className="font-weight-bold"> Nombre: </span>

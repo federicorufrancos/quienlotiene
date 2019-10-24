@@ -7,6 +7,7 @@ import ListDevices from './components/devices/ListDevices';
 import DeviceInfo from './components/devices/DeviceInfo';
 import Requests from './components/requests/Request';
 import NewDevice from './components/devices/NewDevice.js';
+import DeviceEdition from './components/devices/DeviceEdition';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <div>
           <div className="container">
             <div className="row mt-3">
-              <Navbar/>
+              <Navbar />
             </div>
             <div className="row my-4">
               <Switch>
@@ -23,6 +24,11 @@ function App() {
                 <Route exact path="/requests" component={Requests} />
                 <Route exact path="/device/new" component={NewDevice} />
                 <Route exact path="/device/:id" component={DeviceInfo} />
+                <Route
+                  exact
+                  path="/device/edit/:id"
+                  component={DeviceEdition}
+                />
               </Switch>
             </div>
           </div>
