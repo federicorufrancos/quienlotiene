@@ -138,8 +138,8 @@ const NewDevice = ({ history, firestore }) => {
             <input
               className="form-check-input ml-3 mt-2"
               type="checkbox"
-              value={works}
-              onChange={e => saveWorks(e.target.value)}
+              checked={works}
+              onChange={e => saveWorks(e.target.checked)}
             />
           </label>
         </div>
