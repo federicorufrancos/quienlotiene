@@ -5,6 +5,7 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-circle-left-solid.svg';
+import Swal from 'sweetalert2';
 
 const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
   if (!deviceToUpdate) {
@@ -26,7 +27,6 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
 
   const onSubmitUpdateDevice = e => {
     e.preventDefault();
-    console.log('name ', name);
     const deviceUpdated = {
       ...deviceToUpdate,
       name,
@@ -38,7 +38,6 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
       works,
       comments
     };
-    console.log('deviceUpdated ', deviceUpdated, ' id ', id);
     firestore
       .update(
         {
@@ -50,6 +49,30 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
       .then(history.push(`/device/${id}`));
   };
 
+  const onDeleteDevice = e => {
+    Swal.fire({
+      title: 'Estas seguro de eliminarlo?',
+      text: 'No cambios no podran regresarse',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminarlo',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.value) {
+        firestore.delete({ collection: 'cities', doc: 'SF' }).then(result => {
+          Swal.fire(
+            'Eliminado!',
+            'El dispositivo ha sido eliminado exitosamente',
+            'success'
+          );
+          history.push('/');
+        });
+      }
+    });
+  };
+
   return (
     <div className="col-lg-12">
       <Link to={`/device/${id}`} className="btn btn-info">
@@ -57,10 +80,21 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
         Volver a la info
       </Link>
       <div className="card card-device-info border-secondary mb-3 mt-3">
-        <form onSubmit={onSubmitUpdateDevice}>
-          <div className="card-header pb-3 lead">
+        <div className="card-header">
+          <span className="lead">
             Edición de información sobre el dispositivo
-          </div>
+          </span>
+          <span className="pt-1">
+            <button
+              type="button"
+              onClick={() => onDeleteDevice()}
+              className="btn btn-danger float-right"
+            >
+              Eliminar dispositivo
+            </button>
+          </span>
+        </div>
+        <form onSubmit={onSubmitUpdateDevice}>
           <div className="card-body">
             <div className="form-group">
               <label> Nombre: </label>
@@ -178,6 +212,10 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
       </div>
     </div>
   );
+};
+
+DeviceEdition.propTypes = {
+  firestore: PropTypes.object.isRequired
 };
 
 export default compose(
