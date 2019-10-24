@@ -61,7 +61,7 @@ const DeviceEdition = ({ match, history, firestore, deviceToUpdate }) => {
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.value) {
-        firestore.delete({ collection: 'cities', doc: 'SF' }).then(result => {
+        firestore.delete({ collection: 'devices', doc: id }).then(result => {
           Swal.fire(
             'Eliminado!',
             'El dispositivo ha sido eliminado exitosamente',
