@@ -108,63 +108,61 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
         <ArrowLeft className="app-icon p-1" />
         Volver al Listado
       </Link>
-      <div>
-        <div className="card card-device-info border-secondary mb-3 mt-3">
-          <div className="card-header">
-            <span className="lead">Información sobre el dispositivo</span>
-            <span className="pt-1">
-              <Link
-                to={`/device/edit/${id}`}
-                className="btn btn-info float-right"
-              >
-                Editar
-              </Link>
-            </span>
-          </div>
-          <div className="card-body">
-            <p className="card-text">
-              <span className="font-weight-bold"> Nombre: </span>
-              {deviceInfo.name}
-            </p>
-            {deviceInfo.assignedTo ? (
-              <p className="card-text">
-                <span className="font-weight-bold"> Asignado a : </span>
-                {deviceInfo.assignedTo.fluxerName}
-              </p>
-            ) : null}
-            <p className="card-text">
-              <span className="font-weight-bold"> Plataforma: </span>
-              {deviceInfo.platform}
-            </p>
-            <p className="card-text">
-              <span className="font-weight-bold"> IDFlux: </span>
-              {deviceInfo.IDFlux}
-            </p>
-            <p className="card-text">
-              <span className="font-weight-bold"> Funciona: </span>
-              {deviceInfo.works ? 'SI' : 'NO'}
-            </p>
-            <p className="card-text">
-              <span className="font-weight-bold"> IMEI: </span>
-              {deviceInfo.IMEI}
-            </p>
-            <p className="card-text">
-              <span className="font-weight-bold"> UDID: </span>
-              {deviceInfo.UDID}
-            </p>
-            <p className="card-text">
-              <span className="font-weight-bold"> Comentarios: </span>
-              {deviceInfo.comments}
-            </p>
-          </div>
+      <div className="card card-device-info border-secondary mb-3 mt-3">
+        <div className="card-header">
+          <span className="lead">Información sobre el dispositivo</span>
+          <span className="pt-1">
+            <Link
+              to={`/device/edit/${id}`}
+              className="btn btn-info float-right"
+            >
+              Editar
+            </Link>
+          </span>
         </div>
-        <button
-          className={'btn ' + classNameOperation}
-          type="button"
-          onClick={() => onUpdateDeviceAssignment()}
-        >
-          {operation}
-        </button>
+        <div className="card-body">
+          <p className="card-text">
+            <span className="font-weight-bold"> Nombre: </span>
+            {deviceInfo.name}
+          </p>
+          {deviceInfo.assignedTo ? (
+            <p className="card-text">
+              <span className="font-weight-bold"> Asignado a : </span>
+              {deviceInfo.assignedTo.fluxerName}
+            </p>
+          ) : null}
+          <p className="card-text">
+            <span className="font-weight-bold"> Plataforma: </span>
+            {deviceInfo.platform}
+          </p>
+          <p className="card-text">
+            <span className="font-weight-bold"> IDFlux: </span>
+            {deviceInfo.IDFlux}
+          </p>
+          <p className="card-text">
+            <span className="font-weight-bold"> Funciona: </span>
+            {deviceInfo.works ? 'SI' : 'NO'}
+          </p>
+          <p className="card-text">
+            <span className="font-weight-bold"> IMEI: </span>
+            {deviceInfo.IMEI}
+          </p>
+          <p className="card-text">
+            <span className="font-weight-bold"> UDID: </span>
+            {deviceInfo.UDID}
+          </p>
+          <p className="card-text">
+            <span className="font-weight-bold"> Comentarios: </span>
+            {deviceInfo.comments}
+          </p>
+          <button
+            className={'btn ' + classNameOperation}
+            type="button"
+            onClick={() => onUpdateDeviceAssignment()}
+          >
+            {operation}
+          </button>
+        </div>
       </div>
     </div>
   );
