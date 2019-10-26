@@ -5,75 +5,19 @@ import Swal from 'sweetalert2';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import DeviceBookingButtons from './DeviceBookingButtons';
 
 const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
   if (!deviceInfo) {
     return <h1> Esperando </h1>;
   }
   const { id } = match.params;
-  let operation = 'Reservar';
-  let classNameOperation = 'btn-danger';
-  let alerOpt = ['Reservado!', 'El dispositivo te fue asignado.', 'success'];
-  let operationStatus = 'assign';
-  if (
-    deviceInfo.assignedTo !== '' &&
-    deviceInfo.assignedTo.fluxerName === 'Federico Rufrancos'
-  ) {
-    classNameOperation = 'btn-success';
-    operation = 'Liberar dispositivo';
-    alerOpt = ['Liberado!', 'Gracias por liberar el dispositivo.', 'success'];
-    operationStatus = 'release';
-  } else if (deviceInfo.assignedTo !== '') {
-    classNameOperation = 'btn-warning';
-    operation = 'Solicitar dispositivo';
-    operationStatus = 'pending';
-  }
 
-  const onUpdateDeviceAssignment = () => {
-    let newAssignation = '';
-    let waitingList = deviceInfo.waitingList ? deviceInfo.waitingList : [];
-    let newAssignationRecord = '';
-    switch (operationStatus) {
-      case 'assign':
-        newAssignation = {
-          fluxerId: 1111,
-          fluxerName: 'Federico Rufrancos',
-          dateAssigned: new Date().toLocaleDateString()
-        };
-        break;
-      case 'pending':
-        newAssignation = deviceInfo.assignedTo;
-        waitingList.push({
-          fluxerId: 1111,
-          fluxerName: 'Federico Rufrancos',
-          dateRequest: new Date().toLocaleDateString()
-        });
-        break;
-      case 'release':
-        newAssignationRecord = { ...deviceInfo.assignedTo };
-        newAssignationRecord.dateRelease = new Date().toLocaleDateString();
-        newAssignationRecord.deviceId = id;
-        deviceInfo.assignedTo = '';
-        if (waitingList.length > 0) {
-          newAssignation = waitingList.pop();
-          newAssignation.dateAssigned = new Date().toLocaleDateString();
-          deviceInfo.assignedTo = newAssignation;
-          alerOpt = [
-            'Reasignado!',
-            'El dispositivo fue asignado al proximos Fluxer.',
-            'success'
-          ];
-        }
-        break;
-      default:
-        break;
-    }
-
-    const deviceUpdated = {
-      ...deviceInfo,
-      assignedTo: newAssignation,
-      waitingList
-    };
+  const onFinishDeviceAssigment = (
+    deviceUpdated,
+    alerOpt,
+    newAssignationRecord
+  ) => {
     firestore
       .update(
         {
@@ -84,12 +28,10 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
       )
       .then(() => {
         if (newAssignationRecord) {
-          console.log('newAssignationRecord ', newAssignationRecord);
           firestore
             .add({ collection: 'assignations' }, newAssignationRecord)
             .then(() => {
               Swal.fire(...alerOpt);
-              console.log('redirect');
               history.push('/');
             });
         } else {
@@ -98,6 +40,11 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
         }
       })
       .catch(err => {
+        Swal.fire({
+          type: 'error',
+          title: 'Error',
+          text: 'Hubo un error, vuelve a intentarlo'
+        });
         console.log(err);
       });
   };
@@ -155,13 +102,11 @@ const DeviceInfo = ({ match, history, firestore, deviceInfo }) => {
             <span className="font-weight-bold"> Comentarios: </span>
             {deviceInfo.comments}
           </p>
-          <button
-            className={'btn ' + classNameOperation}
-            type="button"
-            onClick={() => onUpdateDeviceAssignment()}
-          >
-            {operation}
-          </button>
+          <DeviceBookingButtons
+            deviceInfo={deviceInfo}
+            id={id}
+            onFinishDeviceAssigment={onFinishDeviceAssigment}
+          />
         </div>
       </div>
     </div>
