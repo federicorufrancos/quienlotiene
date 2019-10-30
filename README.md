@@ -1,23 +1,28 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Thrid part libraries
-* Alerts
-    https://sweetalert2.github.io/
-* Spinners 
-    https://tobiasahlin.com/spinkit/
+
+- Alerts
+  https://sweetalert2.github.io/
+- Spinners
+  https://tobiasahlin.com/spinkit/
+- React Hook Form
+  https://react-hook-form.com/
+  Form validation inputs
 
 ## Styling
-* Template
-    https://bootswatch.com/darkly/
-* Icons
-    https://fontawesome.com/icons?d=gallery
+
+- Template
+  https://bootswatch.com/darkly/
+- Icons
+  https://fontawesome.com/icons?d=gallery
 
 ## Git branch naming
-* User developing task - task type - SummaryOperationDeveloping
-* Task types: feature, bug
-* EX: 
-    FR-feature-BookDevice
 
+- User developing task - task type - SummaryOperationDeveloping
+- Task types: feature, bug
+- EX:
+  FR-feature-BookDevice
 
 ## Available Scripts
 

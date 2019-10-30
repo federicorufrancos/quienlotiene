@@ -4,6 +4,8 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-circle-left-soli
 import { firestoreConnect } from 'react-redux-firebase';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
+import useForm from 'react-hook-form';
+import InputFormError from '../layouts/InputFormError';
 
 const NewDevice = ({ history, firestore }) => {
   const [name, saveName] = useState('');
@@ -15,10 +17,9 @@ const NewDevice = ({ history, firestore }) => {
   const [works, saveWorks] = useState(true);
   const [comments, saveComments] = useState('');
 
-  const onSubmitDevice = e => {
-    e.preventDefault();
-    console.log('carga dispositivo');
+  const { register, handleSubmit, errors, watch } = useForm();
 
+  const onSubmitDevice = e => {
     const newDevice = {
       name,
       operativeSystem,
@@ -41,6 +42,26 @@ const NewDevice = ({ history, firestore }) => {
     });
   };
 
+  const validateIDFlux = value => {
+    if (value.length > 2) {
+      return firestore
+        .get({ collection: 'devices', where: ['IDFlux', '==', value] })
+        .then(result => {
+          if (!result.empty) {
+            return 'El ID ingresado ya se encuentra asignado a otro dispositivo';
+          }
+        });
+    }
+  };
+
+  const validateIMEIDeviceId = () => {
+    const IMEI = watch('IMEI');
+    const deviceId = watch('deviceId');
+    if (!IMEI && !deviceId) {
+      return 'Ingrese el IMEI(Android) o device Id(IOS)';
+    }
+  };
+
   const operativeSystems = ['Android', 'IOS'];
 
   return (
@@ -53,18 +74,19 @@ const NewDevice = ({ history, firestore }) => {
         <div className="card-header">
           <span className="lead">Agregar dispositivo</span>
         </div>
-        <form onSubmit={onSubmitDevice}>
+        <form onSubmit={handleSubmit(onSubmitDevice)}>
           <div className="card-body">
-            <div className="form-group">
+            <div className="form-group mb-3">
               <label> Nombre: </label>
               <input
                 type="text"
-                name={name}
+                name="name"
                 onChange={e => saveName(e.target.value)}
                 placeholder="Escriba el nombre del dispositivo"
-                required
                 className="form-control"
+                ref={register({ required: 'El campo es requerido' })}
               />
+              <InputFormError fieldName="name" errors={errors} />
             </div>
             <div className="row">
               <div className="col-lg-6">
@@ -73,16 +95,23 @@ const NewDevice = ({ history, firestore }) => {
                     <label> Sistema Operativo </label>
                     <select
                       className="form-control"
-                      name={operativeSystem}
+                      name="operativeSystem"
                       onChange={e => saveOperativeSystem(e.target.value)}
+                      ref={register({ required: 'El campo es requerido' })}
                     >
-                      <option option="">Seleccione el sistema operativo</option>
+                      <option value="" disabled selected>
+                        Seleccione el sistema operativo
+                      </option>
                       {operativeSystems.map((operativeSystem, index) => (
                         <option key={index} value={operativeSystem}>
                           {operativeSystem}
                         </option>
                       ))}
                     </select>
+                    <InputFormError
+                      fieldName="operativeSystem"
+                      errors={errors}
+                    />
                   </div>
                 </div>
               </div>
@@ -91,12 +120,15 @@ const NewDevice = ({ history, firestore }) => {
                   <label> Versión: </label>
                   <input
                     type="text"
-                    name={OSVersion}
+                    name="OSVersion"
                     onChange={e => saveOSVersion(e.target.value)}
                     placeholder="Escriba la versión del SO"
-                    required
                     className="form-control"
+                    ref={register({
+                      required: 'El campo es requerido'
+                    })}
                   />
+                  <InputFormError fieldName="OSVersion" errors={errors} />
                 </div>
               </div>
             </div>
@@ -104,12 +136,22 @@ const NewDevice = ({ history, firestore }) => {
               <label> Id de Flux: </label>
               <input
                 type="text"
-                name={IDFlux}
+                name="IDFlux"
                 onChange={e => saveIDFlux(e.target.value)}
                 placeholder="Escriba el Id de Flux"
-                required
                 className="form-control"
+                ref={register({
+                  required: 'El campo es requerido',
+                  pattern: {
+                    value: /\d+/,
+                    message: 'Ingrese solamente dígitos'
+                  },
+                  validate: async value => {
+                    return await validateIDFlux(value);
+                  }
+                })}
               />
+              <InputFormError fieldName="IDFlux" errors={errors} />
             </div>
             <div className="row">
               <div className="col-lg-6">
@@ -117,12 +159,16 @@ const NewDevice = ({ history, firestore }) => {
                   <label> IMEI: </label>
                   <input
                     type="text"
-                    name={IMEI}
+                    name="IMEI"
                     onChange={e => saveIMEI(e.target.value)}
                     placeholder="Escriba el código de IMEI"
                     className="form-control"
                     disabled={deviceId ? true : false}
+                    ref={register({
+                      validate: value => validateIMEIDeviceId(value)
+                    })}
                   />
+                  <InputFormError fieldName="IMEI" errors={errors} />
                 </div>
               </div>
               <div className="col-lg-6">
@@ -130,12 +176,16 @@ const NewDevice = ({ history, firestore }) => {
                   <label> Device ID: </label>
                   <input
                     type="text"
-                    name={deviceId}
+                    name="deviceId"
                     onChange={e => saveDeviceId(e.target.value)}
                     placeholder="Escriba Id dispositivo IOS"
                     className="form-control"
                     disabled={IMEI ? true : false}
+                    ref={register({
+                      validate: value => validateIMEIDeviceId(value)
+                    })}
                   />
+                  <InputFormError fieldName="deviceId" errors={errors} />
                 </div>
               </div>
             </div>
@@ -145,6 +195,7 @@ const NewDevice = ({ history, firestore }) => {
                 <input
                   className="form-check-input ml-3 mt-2"
                   type="checkbox"
+                  name="works"
                   checked={works}
                   onChange={e => saveWorks(e.target.checked)}
                 />
@@ -153,7 +204,7 @@ const NewDevice = ({ history, firestore }) => {
             <div className="form-group">
               <label> Comentarios: </label>
               <textarea
-                name={comments}
+                name="comments"
                 placeholder="Escriba algunos comentarios"
                 className="form-control"
                 onChange={e => saveComments(e.target.value)}
@@ -161,7 +212,7 @@ const NewDevice = ({ history, firestore }) => {
             </div>
             <input
               type="submit"
-              value="Agergar dispositivo"
+              value="Agregar dispositivo"
               className="btn btn-success"
             />
           </div>
