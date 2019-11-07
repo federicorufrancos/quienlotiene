@@ -59,6 +59,10 @@ const NewDevice = ({ history, firestore }) => {
     const deviceId = watch('deviceId');
     if (!IMEI && !deviceId) {
       return 'Ingrese el IMEI(Android) o device Id(IOS)';
+    } else {
+      if (IMEI.length < 10 && !deviceId < 10) {
+        return 'La cantidad minima de caracteres son 10';
+      }
     }
   };
 
